@@ -4,26 +4,39 @@ import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import Skeleton from "../components/Skeleton";
 import PizzaBlock from "../components/PizzaBlock";
+import Pagination from "../components/Pagination/Pagination";
 
-const Home = () => {
+const Home = ({ searchValue, setSearchValue }) => {
     const [items, setItems] = React.useState([])
+    const [isLoading, setIsLoading] = React.useState(true)
+    const [categoryId, setCategoryId] = React.useState(0)
+    const [sortId, setSortId] = React.useState(
+        {
+            name: 'популярности',
+            sortProperty: 'rating'},
+    )
 
-    const [isLoading, setIsLoading] = React.useState(false)
+
+
 
     React.useEffect(() => {
-        fetch('https://6289e120e5e5a9ad321e689d.mockapi.io/items')
+        setIsLoading(true);
+        fetch(`https://6289e120e5e5a9ad321e689d.mockapi.io/items?
+        ${categoryId > 0 ? `category=${categoryId}` : ''
+        }&sortBy=${sortId.sortProperty}&order=desc`)
             .then((res) => res.json())
             .then((arr) => {
                 setItems(arr);
                 setIsLoading(false);
             })
-    }, []);
+        window.scrollTo(0, 0)
+    }, [categoryId, sortId]);
 
     return (
         <>
             <div className="content__top">
-                <Categories/>
-                <Sort/>
+                <Categories value={categoryId} onChangeCategory={(i) => setCategoryId(i)} />
+                <Sort value={sortId} onChangeSort={(i) => setSortId(i)}/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
@@ -36,6 +49,7 @@ const Home = () => {
                         />)
                 }
             </div>
+            <Pagination/>
         </>
     );
 };

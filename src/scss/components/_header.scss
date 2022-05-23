@@ -6,14 +6,16 @@
 
   .container {
     display: flex;
-    align-items: center;
+    align-content: center;
     justify-content: space-between;
 
     @media (max-width: 645px) {
       flex-direction: column;
-      gap: 30px;
-    }
 
+      .header__cart {
+        margin-top: 20px;
+      }
+    }
   }
 
   &__logo {
